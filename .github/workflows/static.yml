@@ -53,6 +53,6 @@ jobs:
           body: |
             Your deployment to GitHub Pages was successful!
             URL: ${{ steps.deployment.outputs.page_url }}
-          to: pengseangsim210@gmail.com
+          to: hpot2552@gmail.com
           from: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
           secure: true  # Use SSL/TLS
