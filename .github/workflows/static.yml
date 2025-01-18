@@ -41,3 +41,18 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+ - name: Send email notification on success
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465  # Use port 465 for SSL/TLS
+          username: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
+          password: ${{ secrets.GMAIL_PASSWORD }}  # Use GitHub Secret
+          subject: "Deployment Successful - GitHub Pages"
+          body: |
+            Your deployment to GitHub Pages was successful!
+            URL: ${{ steps.deployment.outputs.page_url }}
+          to: pengseangsim210@gmail.com
+          from: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
+          secure: true  # Use SSL/TLS
