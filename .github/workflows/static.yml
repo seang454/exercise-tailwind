@@ -15,56 +15,56 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Ensure only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup Pages
+
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload artifact
+
+      - name: Upload static files to artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload only the src folder where index.html is stored
+          # Upload only the `src` folder containing `index.html`
           path: 'src'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Send email notification on success
-        if: success()
+
+      - name: Send email notification on successful deployment
+        if: ${{ success() }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 465  # Use port 465 for SSL/TLS
-          username: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
-          password: ${{ secrets.GMAIL_PASSWORD }}  # Use GitHub Secret (app password if using 2FA)
+          server_port: 465
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
           subject: "Deployment Successful - GitHub Pages"
           body: |
-          Hello,
-            \n
+            Hello,
+
             I'm writing to let you know that my static website has been deployed successfully to GitHub Pages.
-            \n
+
             Your website is now live at:
             ${{ steps.deployment.outputs.page_url }}
-            \n
+
             Thanks for your attention.
-            \n
+
             Best regards,
-            \n  
-            [Peng Seang Sim](https://pengseangsim.com)
-            Your deployment to GitHub Pages was successful!
-            URL: ${{ steps.deployment.outputs.page_url }}
+            Peng Seang Sim
+            [Visit my site](https://pengseangsim.com)
           to: pengseangsim210@gmail.com
-          from: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
-          secure: true  # Use SSL/TLS
+          from: ${{ secrets.GMAIL_USERNAME }}
+          secure: true
