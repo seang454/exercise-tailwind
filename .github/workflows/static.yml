@@ -1,28 +1,82 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# # Simple workflow for deploying static content to GitHub Pages
+# name: Deploy static content to Pages
+
+# on:
+#   # Runs on pushes targeting the default branch
+#   push:
+#     branches: ["master"]
+
+#   # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
+
+# # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# permissions:
+#   contents: read
+#   pages: write
+#   id-token: write
+
+# # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# concurrency:
+#   group: "pages"
+#   cancel-in-progress: false
+
+# jobs:
+#   # Single deploy job since we're just deploying
+#   deploy:
+#     environment:
+#       name: github-pages
+#       url: ${{ steps.deployment.outputs.page_url }}
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#       - name: Setup Pages
+#         uses: actions/configure-pages@v5
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v3
+#         with:
+#           # Upload only the src folder where index.html is stored
+#           path: 'src'
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v4
+#       - name: Send email notification on success
+#         if: success()
+#         uses: dawidd6/action-send-mail@v3
+#         with:
+#           server_address: smtp.gmail.com
+#           server_port: 465  # Use port 465 for SSL/TLS
+#           username: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
+#           password: ${{ secrets.GMAIL_PASSWORD }}  # Use GitHub Secret (app password if using 2FA)
+#           subject: "Deployment Successful - GitHub Pages"
+#           body: |
+#             Your deployment to GitHub Pages was successful!
+#             URL: ${{ steps.deployment.outputs.page_url }}
+#           to: pengseangsim210@gmail.com
+#           from: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
+#           secure: true  # Use SSL/TLS
+
+
+
+# Test new gmail accounts
+name: Deploy static content to Pages with Email Notification
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["master"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: ["main"]
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -31,28 +85,82 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Move files to root
+        run: |
+          mv src/* .
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload only the src folder where index.html is stored
-          path: 'src'
+          path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - name: Send email notification on success
-        if: success()
+
+      - name: Send email notification
+        if: always()  # Will send email regardless of success or failure
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 465  # Use port 465 for SSL/TLS
-          username: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
-          password: ${{ secrets.GMAIL_PASSWORD }}  # Use GitHub Secret (app password if using 2FA)
-          subject: "Deployment Successful - GitHub Pages"
-          body: |
-            Your deployment to GitHub Pages was successful!
-            URL: ${{ steps.deployment.outputs.page_url }}
+          server_port: 465
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "🚀 GitHub Pages Deployment Status: ${{ job.status }}"
+          html_body: |
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #f8f9fa; padding: 20px; border-radius: 5px; }
+                .success { color: #28a745; }
+                .failure { color: #dc3545; }
+                .details { background-color: #fff; padding: 20px; border: 1px solid #dee2e6; border-radius: 5px; margin-top: 20px; }
+                .footer { margin-top: 20px; font-size: 12px; color: #6c757d; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h2>GitHub Pages Deployment Update</h2>
+                  <p class="${{ job.status == 'success' && 'success' || 'failure' }}">
+                    Status: ${{ job.status == 'success' && '✅ Successful' || '❌ Failed' }}
+                  </p>
+                </div>
+                
+                <div class="details">
+                  <h3>📊 Deployment Details</h3>
+                  <p><strong>Repository:</strong> ${{ github.repository }}</p>
+                  <p><strong>Branch:</strong> ${{ github.ref_name }}</p>
+                  <p><strong>Triggered by:</strong> ${{ github.actor }}</p>
+                  <p><strong>Commit:</strong> ${{ github.sha }}</p>
+                  <p><strong>Deployment URL:</strong> <a href="${{ steps.deployment.outputs.page_url }}">${{ steps.deployment.outputs.page_url }}</a></p>
+                  
+                  <h3>📝 Latest Commit</h3>
+                  <p><strong>Message:</strong> ${{ github.event.head_commit.message }}</p>
+                  <p><strong>Timestamp:</strong> ${{ github.event.head_commit.timestamp }}</p>
+                  
+                  <h3>🔍 Quick Links</h3>
+                  <p>
+                    • <a href="https://github.com/${{ github.repository }}/deployments">View Deployment History</a><br>
+                    • <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}">View Commit Details</a>
+                  </p>
+                </div>
+                
+                <div class="footer">
+                  <p>This is an automated message from your GitHub Actions workflow. Please do not reply to this email.</p>
+                  <p>If you have any issues, please check the GitHub Actions logs or contact your system administrator.</p>
+                </div>
+              </div>
+            </body>
+            </html>
           to: pengseangsim210@gmail.com
-          from: ${{ secrets.GMAIL_USERNAME }}  # Use GitHub Secret
-          secure: true  # Use SSL/TLS
+          from: GitHub Actions <${{ secrets.GMAIL_USERNAME }}>
+          content_type: text/html
+          priority: high
