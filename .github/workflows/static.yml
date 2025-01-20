@@ -64,7 +64,7 @@ name: Deploy static content to Pages with Email Notification
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
