@@ -214,14 +214,14 @@
       <aside class="absolute w-1/5 sm:absolute lg:static xl:static 2xl:static">
         <button
           id="toggle-sidebar"
-          class="relative block p-3 px-5 text-white bg-blue-600 rounded-lg -top-10 left-10 sm:block lg:hidden xl:hidden "
+          class="relative block p-3 px-5 text-white bg-blue-600 rounded-lg -top-10 left-10 sm:block lg:hidden xl:hidden"
           aria-expanded="false"
         >
           Aside
         </button>
         <div
           id="sidebar"
-          class="sticky top-0 flex flex-col transform translate-x-[-100%] transition-transform duration-300 sm:translate-x-0 lg:translate-x-0  w-64 min-h-screen p-6 bg-gray-100  sm:hidden lg:hidden xl:block"
+          class="sticky top-0 flex flex-col transform translate-x-[-100%] transition-transform duration-300 sm:translate-x-0 lg:translate-x-0 w-64 min-h-screen p-6 bg-gray-100 sm:hidden lg:hidden xl:block"
         >
           <!-- Sidebar -->
           <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
@@ -231,16 +231,24 @@
                 <a href="#" class="text-gray-700 hover:text-indigo-600">Team</a>
               </li>
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">Projects</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >Projects</a
+                >
               </li>
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">Calendar</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >Calendar</a
+                >
               </li>
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">Documents</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >Documents</a
+                >
               </li>
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">Reports</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >Reports</a
+                >
               </li>
             </ul>
           </nav>
@@ -248,19 +256,25 @@
             <h2 class="text-sm font-semibold text-gray-500">Your teams</h2>
             <ul class="mt-4 space-y-4">
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">H Heroicons</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >H Heroicons</a
+                >
               </li>
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">T Tailwind Labs</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >T Tailwind Labs</a
+                >
               </li>
               <li>
-                <a href="#" class="text-gray-700 hover:text-indigo-600">W Workcation</a>
+                <a href="#" class="text-gray-700 hover:text-indigo-600"
+                  >W Workcation</a
+                >
               </li>
             </ul>
           </div>
         </div>
       </aside>
-      
+
       <section class="flex flex-col w-full p-8 bg-gray-100 lg:w-4/5 gap-y-10">
         <section
           class="grid grid-cols-1 gap-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
@@ -734,6 +748,17 @@
             </div>
           </div>
         </section>
+        <section>
+          <div class="container px-4 py-8 mx-auto">
+            <h1 class="mb-6 text-3xl font-bold text-center">Products</h1>
+            <div
+              id="product-list"
+              class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              <!-- Cards will be injected here -->
+            </div>
+          </div>
+        </section>
         <section class="overflow-hidden">
           <div
             class="px-6 py-16 text-white rounded-lg bg-gradient-to-b from-gray-900 to-purple-900 h-fit md:h-[60vh] xl:h-[50vh] 2xl:h-[50vh]"
@@ -1175,14 +1200,19 @@
       AOS.init();
     </script>
     <script>
-      const sidebar = document.getElementById('sidebar');
-      const toggleButton = document.getElementById('toggle-sidebar');
-    
-      toggleButton.addEventListener('click', () => {
-        const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
-        toggleButton.setAttribute('aria-expanded', !isExpanded);
-        sidebar.style.transform = isExpanded ? 'translateX(-100%)' : 'translateX(0)';
+      const sidebar = document.getElementById("sidebar");
+      const toggleButton = document.getElementById("toggle-sidebar");
+
+      toggleButton.addEventListener("click", () => {
+        const isExpanded =
+          toggleButton.getAttribute("aria-expanded") === "true";
+        toggleButton.setAttribute("aria-expanded", !isExpanded);
+        sidebar.style.transform = isExpanded
+          ? "translateX(-100%)"
+          : "translateX(0)";
       });
     </script>
+    <script src="app.js"></script>
+
   </body>
 </html>
